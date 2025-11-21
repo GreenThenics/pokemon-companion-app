@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="p-5 mb-4 bg-white rounded-3 shadow-sm text-center">
+  <h1 class="display-5 fw-bold">Welcome to the Pokémon Companion Chooser!</h1>
+  <p class="lead">Pick 4 traits and discover your ideal Pokémon companion. Try the quiz to get started.</p>
+  <a class="btn btn-lg btn-primary" href="{{ url_for('quiz.quiz_form') }}">Start the Quiz</a>
+</div>
+
+<!-- small grid to test responsiveness -->
+<div class="row">
+  <div class="col-md-4 mb-3">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title">Quiz</h5>
+        <p class="card-text">Choose 4 traits</p>
+        <a href="{{ url_for('quiz.quiz_form') }}" class="btn btn-outline-primary">Go</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title">Leaderboard</h5>
+        <p class="card-text">See top companions</p>
+        <a href="{{ url_for('leaderboard.show_leaderboard') }}" class="btn btn-outline-primary">View</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title">History</h5>
+        <p class="card-text">Recent picks & analytics</p>
+        <a href="{{ url_for('history.history_dashboard') }}" class="btn btn-outline-primary">Open</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

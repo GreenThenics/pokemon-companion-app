@@ -1,0 +1,68 @@
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  margin: 0;
+  padding: 0;
+  line-height: 1.4;
+  background: #f7fafc;
+  color: #111827;
+}
+
+header {
+  background: #ef4444;
+  color: white;
+  padding: 1rem;
+}
+header a { color: white; text-decoration: none; }
+header nav { margin-top: 0.5rem; font-size: 0.95rem; }
+
+main { padding: 1.25rem; max-width: 900px; margin: 0 auto; }
+
+.traits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+select {
+  padding: .5rem;
+  border-radius: .25rem;
+  border: 1px solid #d1d5db;
+  width: 100%;
+}
+
+button {
+  padding: .6rem .9rem;
+  border: none;
+  background: #10b981;
+  color: white;
+  border-radius: .375rem;
+  cursor: pointer;
+}
+
+.result-card {
+  background: white;
+  padding: 1rem;
+  border-radius: .5rem;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.poke-img {
+  max-width: 150px;
+  width: 100%;
+}
+
+.leaderboard { background: white; padding: 1rem; border-radius: .5rem; }
+.leaderboard li { margin: .5rem 0; }
+
+.flashes { margin-bottom: 1rem; }
+.flash { padding: .5rem; border-radius: .25rem; }
+.flash.danger { background: #fee2e2; color: #991b1b; }
+.flash.success { background: #ecfdf5; color: #065f46; }
+.flash.warning { background: #fffbeb; color: #92400e; }
+
+footer { text-align:center; padding: 1rem; color: #6b7280; font-size: .9rem; }

@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center mb-5">
+  <h2 class="display-4 mb-3">
+    <i class="bi bi-trophy-fill text-warning me-3"></i>
+    Leaderboard
+    <i class="bi bi-trophy-fill text-warning ms-3"></i>
+  </h2>
+  <p class="lead text-muted">Top Companions Chosen by Trainers</p>
+</div>
+
+{% if top %}
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <div class="leaderboard-container">
+        {% for item in top %}
+          <div class="leaderboard-item" data-rank="{{ loop.index }}">
+            <div class="rank-badge">
+              {% if loop.index == 1 %}
+                <i class="bi bi-trophy-fill text-warning"></i>
+                <span class="rank-number">#{{ loop.index }}</span>
+              {% elif loop.index == 2 %}
+                <i class="bi bi-award-fill text-secondary"></i>
+                <span class="rank-number">#{{ loop.index }}</span>
+              {% elif loop.index == 3 %}
+                <i class="bi bi-award-fill text-warning"></i>
+                <span class="rank-number">#{{ loop.index }}</span>
+              {% else %}
+                <span class="rank-number rank-regular">#{{ loop.index }}</span>
+              {% endif %}
+            </div>
+            
+            <div class="pokemon-info">
+              <h4 class="pokemon-name">{{ item.pokemon | capitalize }}</h4>
+              <div class="pokemon-stats">
+                <span class="choice-count">
+                  <i class="bi bi-heart-fill me-1"></i>
+                  Chosen {{ item.count }} time{{ 's' if item.count != 1 else '' }}
+                </span>
+              </div>
+            </div>
+            
+            <div class="rank-decoration">
+              {% if loop.index <= 3 %}
+                <div class="medal-glow"></div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% else %}
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="bi bi-question-circle-fill"></i>
+        </div>
+        <h3 class="empty-title">No Champions Yet!</h3>
+        <p class="empty-message">Be the first trainer to discover your perfect Pokémon companion</p>
+        <a href="{{ url_for('quiz.quiz_form') }}" class="btn btn-pokemon btn-lg">
+          <i class="bi bi-play-circle me-2"></i>Start Your Journey
+        </a>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<!-- Custom styles for leaderboard -->
+<style>
+  .leaderboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .leaderboard-item {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    animation: slideInUp 0.6s ease;
+    animation-fill-mode: both;
+  }
+  
+  .leaderboard-item:nth-child(1) { animation-delay: 0.1s; }
+  .leaderboard-item:nth-child(2) { animation-delay: 0.2s; }
+  .leaderboard-item:nth-child(3) { animation-delay: 0.3s; }
+  .leaderboard-item:nth-child(4) { animation-delay: 0.4s; }
+  .leaderboard-item:nth-child(5) { animation-delay: 0.5s; }
+  
+  .leaderboard-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Special styling for top 3 */
+  .leaderboard-item[data-rank="1"] {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #2c3e50;
+    border: 3px solid #f1c40f;  
+    transform: scale(1.02);
+  }
+  
+  .leaderboard-item[data-rank="2"] {
+    background: linear-gradient(135deg, #e8e8e8, #f5f5f5);
+    border: 3px solid #95a5a6;
+    color: #2c3e50;
+  }
+  
+  .leaderboard-item[data-rank="3"] {
+    background: linear-gradient(135deg, #cd7f32, #d4a574);
+    color: #2c3e50;
+    border: 3px solid #a0522d;
+  }
+  
+  .rank-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 25px;
+    min-width: 80px;
+  }
+  
+  .rank-badge i {
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+  }
+  
+  .rank-number {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  .rank-regular {
+    font-size: 2rem;
+    color: var(--poke-blue);
+    font-weight: 900;
+  }
+  
+  .pokemon-info {
+    flex-grow: 1;
+  }
+  
+  .pokemon-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    background: linear-gradient(45deg, var(--poke-red), var(--poke-blue));
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+  
+  .leaderboard-item[data-rank="1"] .pokemon-name,
+  .leaderboard-item[data-rank="3"] .pokemon-name {
+    color: inherit;
+    background: none;
+    -webkit-text-fill-color: inherit;
+  }
+  
+  .choice-count {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(52, 152, 219, 0.1);
+    color: var(--poke-blue);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  
+  .leaderboard-item[data-rank="1"] .choice-count {
+    background: rgba(46, 204, 113, 0.2);
+    color: #27ae60;
+  }
+  
+  .leaderboard-item[data-rank="3"] .choice-count {
+    background: rgba(255, 255, 255, 0.2);
+    color: black;
+  }
+  
+  .medal-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+    animation: rotate 4s linear infinite;
+    pointer-events: none;
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 60px 40px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  }
+  
+  .empty-icon {
+    font-size: 5rem;
+    color: black;
+    margin-bottom: 30px;
+  }
+  
+  .empty-title {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+  
+  .empty-message {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+  }
+  
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .leaderboard-item {
+      flex-direction: column;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .rank-badge {
+      margin-right: 0;
+      margin-bottom: 15px;
+    }
+    
+    .pokemon-name {
+      font-size: 1.5rem;
+    }
+    
+    .empty-state {
+      padding: 40px 20px;
+    }
+    
+    .empty-icon {
+      font-size: 4rem;
+    }
+  }
+</style>
+{% endblock %}

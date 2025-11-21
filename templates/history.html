@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="text-center mb-5">
+    <h1 class="display-4 mb-3 text-primary">History Dashboard</h1>
+    <p class="lead text-muted">Your Pokémon companion journey through time</p>
+  </div>
+
+  <!-- Search Section -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <h3 class="mb-4 text-success">Search by Pokémon</h3>
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <form method="get" action="{{ url_for('history.search_history') }}" class="mb-4">
+            <div class="input-group input-group-lg">
+              <input type="text" 
+                     name="pokemon" 
+                     class="form-control" 
+                     placeholder="Enter Pokémon name (e.g., Pikachu, Charizard...)" 
+                     value="{{ search_query or '' }}"
+                     autocomplete="off">
+              <button type="submit" class="btn btn-success">Search</button>
+            </div>
+          </form>
+
+          {% if search_results is defined %}
+            <div class="mt-4">
+              <h5 class="mb-3">Results for "{{ search_query | capitalize }}":</h5>
+              
+              {% if search_results %}
+                <div class="row g-3">
+                  {% for item in search_results %}
+                    <div class="col-md-6 col-lg-4">
+                      <div class="card border-success border-opacity-25">
+                        <div class="card-body">
+                          <small class="text-muted">{{ item.date.strftime("%Y-%m-%d") if item.date }}</small>
+                          <h6 class="card-title text-warning mt-2 mb-3">{{ item.companion | capitalize }}</h6>
+                          <div class="d-flex flex-wrap gap-1">
+                            {% for trait in item.traits %}
+                              <span class="badge bg-info">{{ trait }}</span>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <div class="alert alert-info text-center">
+                  <p class="mb-0">No history found for "{{ search_query | capitalize }}". Try a different Pokémon name!</p>
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Recent Companions Section -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <h3 class="mb-4 text-dark">Recent 10 Companions</h3>
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          {% if recent %}
+            <div class="row g-3">
+              {% for item in recent %}
+                <div class="col-md-6 col-lg-4">
+                  <div class="card h-100 border-primary border-opacity-25">
+                    <div class="card-body">
+                      <small class="text-muted">{{ item.date.strftime("%Y-%m-%d") if item.date }}</small>
+                      <h6 class="card-title text-primary mt-2 mb-3">{{ item.companion | capitalize }}</h6>
+                      <div class="d-flex flex-wrap gap-1">
+                        {% for trait in item.traits %}
+                          <span class="badge bg-light text-secondary">{{ trait }}</span>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="text-center py-5">
+              <p class="text-muted mb-0">No history yet. Start your journey!</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Best Pokémon by Trait Section -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <h3 class="mb-4 text-dark">Best Pokémon by Trait</h3>
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          {% if best_by_trait %}
+            <div class="row g-3">
+              {% for row in best_by_trait %}
+                <div class="col-md-6 col-lg-4">
+                  <div class="card h-100 bg-light">
+                    <div class="card-body text-center">
+                      <h6 class="text-primary">{{ row._id }}</h6>
+                      <h5 class="text-dark">{{ row.topPokemon | capitalize }}</h5>
+                      <span class="badge bg-success">{{ row.count }} wins</span>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="text-center py-5">
+              <p class="text-muted mb-0">No trait data available yet.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Trait Combos Section -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <h3 class="mb-4 text-dark">Top Trait Combinations</h3>
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          {% if combos %}
+            <div class="list-group list-group-flush">
+              {% for row in combos %}
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center"> 
+                    <span class="badge bg-primary rounded-pill me-3">#{{ loop.index }}</span>
+                    <div class="d-flex flex-wrap gap-1">
+                      {% for trait in row._id %}
+                        <span class="badge bg-light text-secondary">{{ trait }}</span>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <span class="badge bg-success rounded-pill">{{ row.count }} selections</span>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="text-center py-5">
+              <p class="text-muted mb-0">No trait combinations recorded yet.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

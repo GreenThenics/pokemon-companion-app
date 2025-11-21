@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center mb-4">
+  <h2 class="display-4 mb-3">
+    <i class="bi bi-stars text-warning me-3"></i>
+    Choose Your 4 Traits
+    <i class="bi bi-stars text-warning ms-3"></i>
+  </h2>
+  <p class="lead text-muted">Select four traits that best represent your ideal Pokémon companion</p>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-8 col-md-10">
+    <div class="card card-custom">
+      <div class="card-body p-4">
+        <form method="post" action="{{ url_for('quiz.quiz_submit') }}" id="traitForm">
+          <div class="row g-4">
+            {% for i in range(1,5) %}
+            <div class="col-md-6">
+              <div class="trait-selector">
+                <label for="trait{{i}}" class="form-label fw-bold">
+                  <i class="bi bi-gem text-primary me-2"></i>Trait {{i}}
+                </label>
+                <select name="trait{{i}}" id="trait{{i}}" class="form-select form-select-lg trait-select" required>
+                  <option value="">-- Select trait --</option>
+                  {% for t in traits %}
+                    <option value="{{ t }}">{{ t.capitalize() }}</option>
+                  {% endfor %}
+                </select>
+                <div class="invalid-feedback">
+                  Please select a trait.
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          
+          <div class="text-center mt-5">
+            <button type="submit" class="btn btn-outline-primary" id="submitBtn">Find My Companion</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Additional styling and animations -->
+<style>
+  .trait-selector {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+  
+  .trait-select {
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  }
+  
+  .trait-select:focus {
+    border-color: var(--poke-blue);
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+  }
+  
+  .trait-select option {
+    padding: 10px;
+  }
+  
+  .form-label {
+    color: #2c3e50;
+    font-size: 1.1rem;
+  }
+  
+  #submitBtn {
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  
+  .trait-selector:hover .trait-select {
+    border-color: var(--poke-yellow);
+    transform: translateY(-2px);
+  }
+  
+  /* Pokemon-themed background pattern */
+  .card-custom::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 20%, rgba(241, 196, 15, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(52, 152, 219, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 60%, rgba(231, 76, 60, 0.1) 0%, transparent 50%);
+    border-radius: 15px;
+    z-index: -1;
+  }
+  
+  .card-custom {
+    position: relative;
+  }
+</style>
+
+<script>
+  // Form validation and enhancement
+  document.getElementById('traitForm').addEventListener('submit', function(e) {
+    const selects = this.querySelectorAll('select[required]');
+    const selectedValues = [];
+    let isValid = true;
+    
+    selects.forEach(select => {
+      if (select.value) {
+        if (selectedValues.includes(select.value)) {
+          e.preventDefault();
+          select.classList.add('is-invalid');
+          select.nextElementSibling.textContent = 'Please select different traits.';
+          isValid = false;
+        } else {
+          selectedValues.push(select.value);
+          select.classList.remove('is-invalid');
+        }
+      }
+    });
+    
+    if (isValid && selectedValues.length === 4) {
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Finding Your Companion...';
+      submitBtn.disabled = true;
+    }
+  });
+  
+  // Add change event listeners to remove invalid state
+  document.querySelectorAll('.trait-select').forEach(select => {
+    select.addEventListener('change', function() {
+      this.classList.remove('is-invalid');
+    });
+  });
+</script>
+{% endblock %}

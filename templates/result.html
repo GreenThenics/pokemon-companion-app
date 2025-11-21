@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center mb-4">
+  <h2 class="display-4 mb-3">
+    <i class="bi bi-heart-eyes text-danger me-3"></i>
+    Your Pokémon Companion
+    <i class="bi bi-heart-eyes text-danger ms-3"></i>
+  </h2>
+  <p class="lead text-muted">Meet your perfect match!</p>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-8 col-md-10">
+    <div class="card card-custom pokemon-card">
+      <div class="card-body p-5">
+        <div class="text-center mb-4">
+          <h3 class="display-5 pokemon-name mb-4">{{ pokemon.name | capitalize }}</h3>
+          
+          <div class="pokemon-image-container mb-4">
+            {% if pokemon.image %}
+              <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}" class="pokemon-image">
+            {% else %}
+              <div class="no-image-placeholder">
+                <i class="bi bi-image text-muted"></i>
+                <p class="text-muted mb-0">Image not available</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <div class="info-card">
+              <h5 class="info-title">
+                <i class="bi bi-lightning-charge text-warning me-2"></i>Types
+              </h5>
+              <div class="type-badges">
+                {% for type in pokemon.types %}
+                  <span class="badge type-badge">{{ type }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 mb-3">
+            <div class="info-card">
+              <h5 class="info-title">
+                <i class="bi bi-gear text-primary me-2"></i>Abilities
+              </h5>
+              <div class="ability-list">
+                {% for ability in pokemon.abilities %}
+                  <span class="badge ability-badge">{{ ability }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="matched-traits-section mt-4">
+          <h5 class="info-title text-center mb-3">
+            <i class="bi bi-stars text-warning me-2"></i>Matched Traits
+          </h5>
+          <div class="trait-badges text-center">
+            {% for trait in traits %}
+              <span class="badge trait-badge">{{ trait }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="text-center mt-4">
+  <div class="action-buttons">
+    <a href="{{ url_for('quiz.quiz_form') }}" class="btn btn-outline-primary btn-lg me-3">Try Again
+    </a>
+    <a href="{{ url_for('leaderboard.show_leaderboard') }}" class="btn btn-outline-primary btn-lg">View Leaderboard
+    </a>
+  </div>
+</div>
+
+<!-- Custom styles for result page -->
+<style>
+  .pokemon-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: grey;
+    border: none;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .pokemon-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+  }
+  
+  .pokemon-card .card-body {
+    position: relative;
+    z-index: 1;
+    color: #2c3e50;
+  }
+  
+  .pokemon-name {
+    background: linear-gradient(45deg, var(--poke-red), var(--poke-yellow));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .pokemon-image-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .pokemon-image {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    background: radial-gradient(circle, #f8f9fa, #e9ecef);
+    animation: bounce 2s infinite;
+  }
+  
+  .no-image-placeholder {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 3px dashed #dee2e6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    margin: 0 auto;
+  }
+  
+  .no-image-placeholder i {
+    font-size: 3rem;
+    margin-bottom: 10px;
+  }
+  
+  .info-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    padding: 20px;
+    height: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+  }
+  
+  .info-title {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+  
+  .type-badge {
+    background: linear-gradient(45deg, var(--poke-blue), var(--poke-green));
+    color: grey;
+    padding: 8px 15px;
+    margin: 3px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .ability-badge {
+    background: linear-gradient(45deg, var(--poke-red), #e67e22);
+    color: grey;
+    padding: 8px 15px;
+    margin: 3px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .trait-badge {
+    background: linear-gradient(45deg, var(--poke-yellow), #f39c12);
+    color: #2c3e50;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .matched-traits-section {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 25px;
+    border: 2px solid rgba(241, 196, 15, 0.3);
+  }
+  
+  .action-buttons .btn {
+    margin: 10px 5px;
+    min-width: 180px;
+  }
+  
+  .btn-outline-primary {
+    border: 2px solid #2c3e50;
+    color: var(--poke-blue);
+    font-weight: 600;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-outline-primary:hover {
+    background: #2c3e50;
+    border-color: var(--poke-blue);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+  }
+  
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-10px);
+    }
+    60% {
+      transform: translateY(-5px);
+    }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .pokemon-image {
+      max-width: 150px;
+      max-height: 150px;
+    }
+    
+    .no-image-placeholder {
+      width: 150px;
+      height: 150px;
+    }
+    
+    .action-buttons .btn {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+    }
+  }
+</style>
+{% endblock %}
